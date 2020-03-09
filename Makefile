@@ -2,7 +2,7 @@
 
 # get tag of maoxian bot
 #BOT_VERSION=$(shell git describe --tags `git rev-list --tags --max-count=1`)
-BOT_VERSION=0.0.0
+BOT_VERSION=0.0.1
 
 GITVERSION:=$(shell git --version | grep ^git | sed 's/^.* //g')
 GITCOMMIT:=$(shell git rev-parse HEAD)
