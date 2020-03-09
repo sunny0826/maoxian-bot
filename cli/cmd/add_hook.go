@@ -27,11 +27,11 @@ func (ah *AddHookCommand) Init() {
 		},
 		Example: addhookExample(),
 	}
-	ah.command.Flags().StringVarP(&ah.hookUrl, "hook", "w", "http://test-bot.keking.cn", "url of webhook server")
-	ah.command.Flags().StringVarP(&ah.access, "access", "a", "NQUQC8KqzQWzYNmsTGtK", "admin secret token of github or gitlab")
-	ah.command.Flags().StringVarP(&ah.repo, "repo", "r", "kk-devops-cicd", "repo of github or gitlab")
-	ah.command.Flags().StringVarP(&ah.baseUrl, "baseurl", "b", "https://git.keking.cn", "url of github or gitlab")
-	ah.command.Flags().StringVarP(&ah.username, "username", "u", "kk-devops", "lab name in github or gitlab")
+	ah.command.Flags().StringVarP(&ah.hookUrl, "hook", "w", "", "url of webhook server")
+	ah.command.Flags().StringVarP(&ah.access, "access", "a", "", "admin secret token of github or gitlab")
+	ah.command.Flags().StringVarP(&ah.repo, "repo", "r", "", "repo of github or gitlab")
+	ah.command.Flags().StringVarP(&ah.baseUrl, "baseurl", "b", "", "url of github or gitlab")
+	ah.command.Flags().StringVarP(&ah.username, "username", "u", "", "lab name in github or gitlab")
 	ah.command.Flags().StringVarP(&ah.site, "site", "s", "gitlab", "github or gitlab")
 	ah.command.Flags().BoolVarP(&ah.confirm, "confirm", "c", false, "whether to configure")
 }

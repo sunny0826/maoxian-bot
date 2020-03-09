@@ -34,11 +34,11 @@ func (s *ServerCommand) Init() {
 		Example: serverExample(),
 	}
 	s.command.Flags().StringVarP(&s.port, "port", "p", "9000", "server listen port")
-	s.command.Flags().StringVarP(&s.access, "access", "a", "Xy2pyb4_KG_2YN3sxPfx", "lab access token of gitlab or github")
-	s.command.Flags().StringVarP(&s.baseUrl, "baseurl", "b", "https://git.keking.cn", "url of github or gitlab")
-	s.command.Flags().StringVar(&s.droneUrl, "droneurl", "http://drone.keking.cn", "url of drone server")
-	s.command.Flags().StringVar(&s.droneToken, "dronetoken", "9yv1yxLybkfRy1f3IsI8cDRbHbhQXKnp", "drone token of bot")
-	s.command.Flags().StringVarP(&s.webhookToken, "token", "t", "1fa05e71fda0360b6beb5fc0dace3129975a6a382e414647b98a1061c668398e", "wehbook token of gitlab or github")
+	s.command.Flags().StringVarP(&s.access, "access", "a", "", "lab access token of gitlab or github")
+	s.command.Flags().StringVarP(&s.baseUrl, "baseurl", "b", "", "url of github or gitlab")
+	s.command.Flags().StringVar(&s.droneUrl, "droneurl", "", "url of drone server")
+	s.command.Flags().StringVar(&s.droneToken, "dronetoken", "", "drone token of bot")
+	s.command.Flags().StringVarP(&s.webhookToken, "token", "t", "", "wehbook token of gitlab or github")
 }
 
 func (s *ServerCommand) runServer(command *cobra.Command, args []string) error {
