@@ -84,7 +84,7 @@ func (s *ServerCommand) handler(w http.ResponseWriter, r *http.Request) {
 			logrus.Fatal(err)
 		}
 	} else {
-		logrus.Error("do not github or gitlab")
+		logrus.Info("Up")
 		return
 	}
 }

@@ -1,0 +1,137 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "bot-chart.fullname" . }}
+  labels:
+  {{- include "bot-chart.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+  {{- include "bot-chart.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+    {{- include "bot-chart.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+      {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "bot-chart.serviceAccountName" . }}
+      securityContext:
+      {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+          {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: ACCESS
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "bot-chart.fullname" . }}-secret
+                  key: access
+            - name: DRONE_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "bot-chart.fullname" . }}-secret
+                  key: droneToken
+            - name: WEBHOOK_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "bot-chart.fullname" . }}-secret
+                  key: webhookToken
+          command:
+            - /bin/mxbot
+            - server
+          args:
+            - --port={{.Values.botServer.port}}
+            - --access=$(ACCESS)
+            - --baseurl={{.Values.botServer.baseUrl}}
+            - --droneurl={{.Values.botServer.droneUrl}}
+            - --dronetoken=$(DRONE_TOKEN)
+            - --token=$(WEBHOOK_TOKEN)
+          ports:
+            - name: http
+              containerPort: {{ .Values.botServer.port }}
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          resources:
+      {{- toYaml .Values.resources | nindent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+      {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+      {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+  {{- toYaml . | nindent 8 }}
+  {{- end }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: maoxian-operator
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: maoxian-operator
+  template:
+    metadata:
+      labels:
+        name: maoxian-operator
+    spec:
+      serviceAccountName: maoxian-operator
+      containers:
+        - name: maoxian-operator
+          image: {{.Values.operatorImage.repository}}:{{.Values.operatorImage.operatorTag}}
+          command:
+            - maoxian-operator
+          imagePullPolicy: {{.Values.operatorImage.pullPolicy}}
+          env:
+            - name: WATCH_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: OPERATOR_NAME
+              value: "maoxian-operator"
+            - name: ADMIN_ACCESS
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "bot-chart.fullname" . }}-secret
+                  key: adminAccess
+            - name: GIT_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "bot-chart.fullname" . }}-config
+                  key: baseUrl
+            - name: BOT_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "bot-chart.fullname" . }}-config
+                  key: username
+            - name: WEBHOOK
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "bot-chart.fullname" . }}-config
+                  key: hookUrl
+            - name: SECREC_NAME
+              value: {{ include "bot-chart.fullname" . }}-secret
+
