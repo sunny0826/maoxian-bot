@@ -134,4 +134,8 @@ spec:
                   key: hookUrl
             - name: SECREC_NAME
               value: {{ include "bot-chart.fullname" . }}-secret
-
+            - name: WEBHOOK_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "bot-chart.fullname" . }}-secret
+                  key: webhookToken

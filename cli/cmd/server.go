@@ -62,21 +62,23 @@ func (s *ServerCommand) handler(w http.ResponseWriter, r *http.Request) {
 	if _, ok := r.Header["X-Gitlab-Event"]; ok {
 		logrus.Info("GitLab Event")
 		if _, ok := r.Header["X-Gitlab-Token"]; ok {
-			logrus.Info("miss webhookToken")
-		} else if r.Header["X-Gitlab-Token"][0] == s.webhookToken && r.Header["X-Gitlab-Event"][0] == "Note Hook" {
-			event := lab.IssueCommentEvent{}
-			err := json.Unmarshal(body, &event)
-			if err != nil {
-				logrus.Fatal(err)
-			}
-			gitlabClient := lab.GitlabClient(s.access, s.baseUrl)
-			droneClient := drone_ci.DroneClient(s.droneUrl, s.droneToken)
-			err = lab.Process(gitlabClient, droneClient, event)
-			if err != nil {
-				logrus.Fatal(err)
+			if r.Header["X-Gitlab-Token"][0] == s.webhookToken && r.Header["X-Gitlab-Event"][0] == "Note Hook" {
+				event := lab.IssueCommentEvent{}
+				err := json.Unmarshal(body, &event)
+				if err != nil {
+					logrus.Fatal(err)
+				}
+				gitlabClient := lab.GitlabClient(s.access, s.baseUrl)
+				droneClient := drone_ci.DroneClient(s.droneUrl, s.droneToken)
+				err = lab.Process(gitlabClient, droneClient, event)
+				if err != nil {
+					logrus.Fatal(err)
+				}
+			} else {
+				logrus.Warning("illegal token,please check you webhook secretToken")
 			}
 		} else {
-			logrus.Warning("illegal token,please check you webhook secretToken")
+			logrus.Info("miss webhookToken")
 		}
 	} else if _, ok := r.Header["X-GitHub-Event"]; ok {
 		logrus.Info("Github Event")
