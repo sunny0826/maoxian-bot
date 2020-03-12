@@ -34,11 +34,11 @@ func (s *ServerCommand) Init() {
 		Example: serverExample(),
 	}
 	s.command.Flags().StringVarP(&s.port, "port", "p", "9000", "server listen port")
-	s.command.Flags().StringVarP(&s.access, "access", "a", "", "lab access token of gitlab or github")
-	s.command.Flags().StringVarP(&s.baseUrl, "baseurl", "b", "", "url of github or gitlab")
-	s.command.Flags().StringVar(&s.droneUrl, "droneurl", "", "url of drone server")
-	s.command.Flags().StringVar(&s.droneToken, "dronetoken", "", "drone token of bot")
-	s.command.Flags().StringVarP(&s.webhookToken, "token", "t", "", "wehbook token of gitlab or github")
+	s.command.Flags().StringVarP(&s.access, "access", "a", "Xy2pyb4_KG_2YN3sxPfx", "lab access token of gitlab or github")
+	s.command.Flags().StringVarP(&s.baseUrl, "baseurl", "b", "https://git.keking.cn", "url of github or gitlab")
+	s.command.Flags().StringVar(&s.droneUrl, "droneurl", "http://drone.keking.cn", "url of drone server")
+	s.command.Flags().StringVar(&s.droneToken, "dronetoken", "9yv1yxLybkfRy1f3IsI8cDRbHbhQXKnp", "drone token of bot")
+	s.command.Flags().StringVarP(&s.webhookToken, "token", "t", "ba628c268ea4007ed57660b28853ffabc19b2038c16e0616e7d63849aee627d3", "wehbook token of gitlab or github")
 }
 
 func (s *ServerCommand) runServer(command *cobra.Command, args []string) error {
@@ -61,7 +61,9 @@ func (s *ServerCommand) handler(w http.ResponseWriter, r *http.Request) {
 	}
 	if _, ok := r.Header["X-Gitlab-Event"]; ok {
 		logrus.Info("GitLab Event")
-		if r.Header["X-Gitlab-Token"][0] == s.webhookToken && r.Header["X-Gitlab-Event"][0] == "Note Hook" {
+		if _, ok := r.Header["X-Gitlab-Token"]; ok {
+			logrus.Info("miss webhookToken")
+		} else if r.Header["X-Gitlab-Token"][0] == s.webhookToken && r.Header["X-Gitlab-Event"][0] == "Note Hook" {
 			event := lab.IssueCommentEvent{}
 			err := json.Unmarshal(body, &event)
 			if err != nil {
@@ -69,7 +71,7 @@ func (s *ServerCommand) handler(w http.ResponseWriter, r *http.Request) {
 			}
 			gitlabClient := lab.GitlabClient(s.access, s.baseUrl)
 			droneClient := drone_ci.DroneClient(s.droneUrl, s.droneToken)
-			err = lab.Process(gitlabClient,droneClient, event)
+			err = lab.Process(gitlabClient, droneClient, event)
 			if err != nil {
 				logrus.Fatal(err)
 			}

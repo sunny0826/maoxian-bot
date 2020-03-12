@@ -11,7 +11,7 @@ image:
 operatorImage:
   repository: guoxudongdocker/maoxian-operator
   pullPolicy: Always
-  operatorTag: v0.0.2
+  operatorTag: v0.0.4
 
 botServer:
   access: ""
