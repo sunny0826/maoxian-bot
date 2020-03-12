@@ -3,6 +3,7 @@ package drone_ci
 import (
 	"fmt"
 	"github.com/drone/drone-go/drone"
+	"github.com/sirupsen/logrus"
 )
 
 const (
@@ -23,6 +24,7 @@ func (c *Client) GetAddr() string {
 // Drone API: http://{droneUrl}/api/repos/{namespace}/{name}/builds?branch={branch}&commit={commit}
 func (c *Client) BuildCommit(options BuildOptions) (*drone.Build, error) {
 	out := new(drone.Build)
+	logrus.Info("options:%v", options)
 	uri := fmt.Sprintf(buildCommitPath, c.addr, options.Namespace, options.Name, options.Branch, options.Commit)
 	err := c.post(uri, nil, out)
 	return out, err
