@@ -126,7 +126,7 @@ spec:
               valueFrom:
                 configMapKeyRef:
                   name: {{ include "bot-chart.fullname" . }}-config
-                  key: username
+                  key: botUser
             - name: WEBHOOK
               valueFrom:
                 configMapKeyRef:

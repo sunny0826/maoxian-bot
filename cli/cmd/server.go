@@ -74,7 +74,7 @@ func (s *ServerCommand) handler(w http.ResponseWriter, r *http.Request) {
 				logrus.Fatal(err)
 			}
 		} else {
-			logrus.Warning("illegal token,please lab you webhook secretToken")
+			logrus.Warning("illegal token,please check you webhook secretToken")
 		}
 	} else if _, ok := r.Header["X-GitHub-Event"]; ok {
 		logrus.Info("Github Event")

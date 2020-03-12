@@ -1,6 +1,7 @@
 apiVersion: v2
-name: maoxian-bot
+name: maoxian
 description: A bot of git
 type: application
 version: 0.1.0
 appVersion: latest
+home: https://github.com/sunny0826/maoxian-bot

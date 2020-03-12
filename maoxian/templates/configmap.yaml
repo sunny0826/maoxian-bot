@@ -5,7 +5,7 @@ metadata:
   labels:
   {{- include "bot-chart.labels" . | nindent 4 }}
 data:
-  hookUrl: {{.Values.botServer.hookUrl}}
+  hookUrl: http://{{.Values.botServer.hookUrl}}
   baseUrl: {{.Values.botServer.baseUrl}}
   botUser: {{.Values.botServer.botUser}}
 
