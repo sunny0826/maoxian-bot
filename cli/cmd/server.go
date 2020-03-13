@@ -37,7 +37,7 @@ func (s *ServerCommand) Init() {
 	s.command.Flags().StringVarP(&s.access, "access", "a", "Xy2pyb4_KG_2YN3sxPfx", "lab access token of gitlab or github")
 	s.command.Flags().StringVarP(&s.baseUrl, "baseurl", "b", "https://git.keking.cn", "url of github or gitlab")
 	s.command.Flags().StringVar(&s.droneUrl, "droneurl", "http://drone.keking.cn", "url of drone server")
-	s.command.Flags().StringVar(&s.droneToken, "dronetoken", "9yv1yxLybkfRy1f3IsI8cDRbHbhQXKnp", "drone token of bot")
+	s.command.Flags().StringVar(&s.droneToken, "dronetoken", "DZYzrsfUTyKHrenElWxVrJG1Xun48D6t", "drone token of bot")
 	s.command.Flags().StringVarP(&s.webhookToken, "token", "t", "ba628c268ea4007ed57660b28853ffabc19b2038c16e0616e7d63849aee627d3", "wehbook token of gitlab or github")
 }
 

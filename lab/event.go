@@ -52,8 +52,7 @@ func Process(client *gitlab.Client, droneClient drone_ci.Client, event IssueComm
 					}
 				}
 				buildOpt := drone_ci.BuildOptions{
-					Namespace: event.Project.Namespace,
-					Name:      event.Project.Name,
+					PathWithNamespace: event.Project.PathWithNamespace,
 					Branch:    branch,
 					Commit:    sha,
 				}

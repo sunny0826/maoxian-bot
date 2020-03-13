@@ -82,7 +82,7 @@ func makedownTpl(command *Command, event IssueCommentEvent, out *drone.Build, ad
 		tpl += fmt.Sprintf("**module: `%s`**\n", module)
 	}
 	branchUrl := fmt.Sprintf("%s/tree/%s", event.Project.Homepage, command.Args[0])
-	deployUrl := fmt.Sprintf("%s/%s/%s/%v", addr, event.Project.Namespace, event.Project.Name, out.Number)
+	deployUrl := fmt.Sprintf("%s/%s/%v", addr, event.Project.PathWithNamespace, out.Number)
 	tpl += fmt.Sprintf("- commit: %s\n", out.After)
 	tpl += fmt.Sprintf("- build path: %s\n", deployUrl)
 	tpl += fmt.Sprintf("- build branch: [%s](%s)\n", command.Args[0], branchUrl)

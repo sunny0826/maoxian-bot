@@ -7,12 +7,11 @@ import (
 )
 
 const (
-	buildCommitPath = "%s/api/repos/%s/%s/builds?branch=%s&commit=%s"
+	buildCommitPath = "%s/api/repos/%s/builds?branch=%s&commit=%s"
 )
 
 type BuildOptions struct {
-	Namespace string
-	Name      string
+	PathWithNamespace string
 	Branch    string
 	Commit    string
 }
@@ -25,7 +24,8 @@ func (c *Client) GetAddr() string {
 func (c *Client) BuildCommit(options BuildOptions) (*drone.Build, error) {
 	out := new(drone.Build)
 	logrus.Info("options:", options)
-	uri := fmt.Sprintf(buildCommitPath, c.addr, options.Namespace, options.Name, options.Branch, options.Commit)
+	uri := fmt.Sprintf(buildCommitPath, c.addr, options.PathWithNamespace, options.Branch, options.Commit)
+	logrus.Info("url:", uri)
 	err := c.post(uri, nil, out)
 	return out, err
 }
